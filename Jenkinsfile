@@ -40,7 +40,7 @@ pipeline {
         }
       }
     }
-    stage('Deploy to server') {
+    stage('Deploy to EC2 instance') {
       when {
         branch 'develop'
       }
