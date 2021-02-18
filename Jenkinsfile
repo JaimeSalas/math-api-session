@@ -37,12 +37,12 @@ pipeline {
           image 'node:14-alpine'
           reuseNode true 
         }
-        environment {
-          BASE_API_URL = "http://$ec2Instance:$appPort"
-        }
-        steps {
-          sh 'npm run test:e2e'
-        }
+      }
+      environment {
+        BASE_API_URL = "http://$ec2Instance:$appPort"
+      }
+      steps {
+        sh 'npm run test:e2e'
       }
     }
     stage('Build image & push it to DockerHub') {
