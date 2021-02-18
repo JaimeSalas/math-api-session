@@ -48,7 +48,6 @@ pipeline {
         containerName = 'math-api'
         ec2Instance = 'ec2-15-188-3-122.eu-west-3.compute.amazonaws.com'
         appPort = 80
-        user = 'ec2-user'
       }
       steps {
         withCredentials([
