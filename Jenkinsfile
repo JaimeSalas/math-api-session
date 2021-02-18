@@ -61,7 +61,7 @@ pipeline {
           script {
             sh '''
               chmod +x ./scripts/deploy.sh
-              ssh -o StrictHostKeyChecking=no -i $identityFile $user@ec2Instance \
+              ssh -o StrictHostKeyChecking=no -i $identityFile $user@$ec2Instance \
               APP_PORT=$appPort CONTAINER_NAME=$containerName IMAGE_NAME=$imageName bash < ./scripts/deploy.sh
             '''
           }
