@@ -52,7 +52,7 @@ pipeline {
       }
       steps {
         withCredentials([
-          credentialsId: 'ec2-ssh-credntials',
+          credentialsId: 'ec2-ssh-credentials',
           keyFileVariable: 'identityFile',
           passphraseVariable: 'passphrase',
           usernameVariable: 'user'
