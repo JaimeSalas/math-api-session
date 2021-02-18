@@ -10,3 +10,4 @@ yarn.lock
 .awcache
 public
 .env
+ec2-access/
