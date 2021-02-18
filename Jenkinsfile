@@ -51,10 +51,12 @@ pipeline {
       }
       steps {
         withCredentials([
-          credentialsId: 'ec2-ssh-credentials',
-          keyFileVariable: 'identityFile',
-          passphraseVariable: 'passphrase',
-          usernameVariable: 'user'
+          sshUserPrivateKey(
+            credentialsId: 'ec2-ssh-credentials',
+            keyFileVariable: 'identityFile',
+            passphraseVariable: 'passphrase',
+            usernameVariable: 'user'
+          )
         ]) {
           script {
             sh '''
