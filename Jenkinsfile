@@ -1,7 +1,9 @@
 pipeline {
   agent any
   environment {
-      imageName = 'jaimesalas/my-api-app:latest'
+    imageName = 'jaimesalas/math-api:latest'
+    ec2Instance = 'ec2-3-8-33-70.eu-west-2.compute.amazonaws.com'
+    appPort = 80
   }
   stages {
     stage('Install dependencies') {
@@ -26,6 +28,23 @@ pipeline {
         sh 'npm test'
       }
     }
+    stage('E2E Tets') {
+      when {
+        branch 'staging'
+      }
+      agent {
+        docker {
+          image 'node:14-alpine'
+          reuseNode true 
+        }
+      }
+      environment {
+        BASE_API_URL = "http://$ec2Instance:$appPort"
+      }
+      steps {
+        sh 'npm run test:e2e'
+      }
+    }
     stage('Build image & push it to DockerHub') {
         steps {
             script {
@@ -36,6 +55,33 @@ pipeline {
                 }
             }
         }
+      }
+    }
+    stage('Deploy to EC2 instance') {
+      when {
+        branch 'develop'
+      }
+      environment {
+        containerName = 'math-api'
+      }
+      steps {
+        withCredentials([
+          sshUserPrivateKey(
+            credentialsId: 'ec2-ssh-credentials',
+            keyFileVariable: 'identityFile',
+            passphraseVariable: 'passphrase',
+            usernameVariable: 'user'
+          )
+        ]) {
+          script {
+            sh '''
+              chmod +x ./scripts/deploy.sh
+              ssh -o StrictHostKeyChecking=no -i $identityFile $user@$ec2Instance \
+              APP_PORT=$appPort CONTAINER_NAME=$containerName IMAGE_NAME=$imageName bash < ./scripts/deploy.sh
+            '''
+          }
+        }
+      }
     }
   }
 }
