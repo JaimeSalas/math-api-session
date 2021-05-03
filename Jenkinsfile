@@ -15,17 +15,6 @@ pipeline {
         sh 'npm ci'
       }
     }
-    // stage('Build') {
-    //   agent {
-    //     docker {
-    //       image 'node:14-alpine'
-    //       reuseNode true
-    //     }
-    //   }
-    //   steps {
-    //     sh 'npm run build'
-    //   }
-    // }
     stage('Tests') {
       agent {
         docker {
