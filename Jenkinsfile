@@ -4,8 +4,21 @@ pipeline {
     imageName = 'jaimesalas/math-api:latest'
     ec2Instance = 'ec2-3-8-33-70.eu-west-2.compute.amazonaws.com'
     appPort = 80
+    githubAccount = "jaimesalas"
+    githubRepoName = "math-api-session"
   }
   stages {
+    stage('Notify GitHub build in progress') {
+      steps {
+        githubNotify(
+          status: "PENDING",
+          credentialsId: "github-commit-status-credentials",
+          account: githubAccount,
+          repo: githubRepoName,
+          description: "Some checks haven't completed yet"
+        )
+      }
+    }
     stage('Install dependencies') {
       agent {
         docker {
@@ -82,6 +95,26 @@ pipeline {
           }
         }
       }
+    }
+  }
+  post {
+    success {
+      githubNotify(
+        status: "SUCCESS",
+        credentialsId: "github-commit-status-credentials",
+        account: githubAccount,
+        repo: githubRepoName,
+        description: "All checks have passed"
+      )
+    }
+    failure {
+      githubNotify(
+        status: "FAILURE",
+        credentialsId: "github-commit-status-credentials",
+        account: githubAccount,
+        repo: githubRepoName,
+        description: "Some checks were not successful"
+      )
     }
   }
 }
