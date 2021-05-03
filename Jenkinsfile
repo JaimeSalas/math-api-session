@@ -50,9 +50,9 @@ pipeline {
         appPort = 80
       }
       steps {
-        withCredentials([
-          sshUserPrivateKey(
-            credentialsId: 'ec2-ssh-credentials',
+        withCredentials(
+          bindings: [sshUserPrivateKey(
+            credentialsId: 'ec2-ssh-credentials', // ec2-ssh-credentials
             keyFileVariable: 'identityFile',
             passphraseVariable: 'passphrase',
             usernameVariable: 'user'
