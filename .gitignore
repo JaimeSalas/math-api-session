@@ -11,3 +11,6 @@ yarn.lock
 public
 .env
 ec2-access
+
+environment/
+kube-config/
