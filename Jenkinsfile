@@ -2,7 +2,7 @@ pipeline {
   agent any
   environment {
     imageName = 'jaimesalas/math-api:latest'
-    ec2Instance = 'ec2-3-8-33-70.eu-west-2.compute.amazonaws.com'
+    ec2Instance = 'ec2-13-36-240-133.eu-west-3.compute.amazonaws.com'
     appPort = 80
   }
   stages {
