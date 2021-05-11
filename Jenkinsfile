@@ -109,6 +109,9 @@ pipeline {
           } else {
             versioningLatestAndPushImage(imageName, 'v1')
             cleanLocalImages(imageName, 'v1')
+            withKubeConfig([credentialsId: 'K8S-FILE', serverUrl: 'https://CF0249BAED2CBFAE8A24D34CE5E6CF7C.sk1.eu-west-3.eks.amazonaws.com']) {
+              sh 'kubectl apply -f kube/app-deployment.yaml'
+            }
           }
         }
       }
