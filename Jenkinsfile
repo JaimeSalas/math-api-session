@@ -77,7 +77,7 @@ pipeline {
         branch 'develop'
       }
       environment {
-        containerName = 'my-api-app'
+        containerName = 'math-api'
       }
       steps {
         withCredentials([
