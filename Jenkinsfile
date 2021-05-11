@@ -1,5 +1,8 @@
 pipeline {
   agent any
+  parameters {
+    booleanParam(name: 'CANARY_DEPLOYMENT', defaultValue: false, description: 'Deploy Canary?')
+  }
   environment {
     imageName = 'jaimesalas/math-api:latest'
     ec2Instance = 'ec2-13-36-240-133.eu-west-3.compute.amazonaws.com'
@@ -92,5 +95,40 @@ pipeline {
         }
       }
     }
+    stage('Canary Deploy') {
+      when {
+        branch 'production'
+      }
+      steps {
+        script {
+          if (params.CANARY_DEPLOYMENT) {
+            versioningLatestAndPushImage(imageName, 'v2')
+            cleanLocalImages(imageName, 'v2')
+            
+            sh 'echo connect to kubernetes and apply canary deployment...'
+          } else {
+            versioningLatestAndPushImage(imageName, 'v1')
+            cleanLocalImages(imageName, 'v1')
+          }
+        }
+      }
+    }
   }
+}
+
+void versioningLatestAndPushImage(String imageName, String version) {
+  withDockerRegistry([credentialsId: 'dockerhub-credentials', url: '']) {
+      echo "pull latest"
+      sh "docker pull ${imageName}:latest"
+      sh "echo tagging to ${version}"
+      sh "docker tag ${imageName}:latest ${imageName}:${version}"
+      sh "echo pushing ${imageName}:${version}"
+      sh "docker push ${imageName}:${version}"
+  }
+} 
+
+void cleanLocalImages(String imageName, String version) {
+  echo 'removing local images'
+  sh "docker rmi ${imageName}:latest"
+  sh "docker rmi ${imageName}:${version}"
 }
