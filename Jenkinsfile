@@ -8,17 +8,6 @@ pipeline {
       githubRepoName = "math-api-session"
     }
     stages {
-     stage('Notify GitHub build in progress') {
-       steps {
-         githubNotify(
-           status: "PENDING",
-           credentialsId: "github-commit-status-credentials",
-           account: githubAccount,
-           repo: githubRepoName,
-           description: "Some checks haven't completed yet"
-         )
-       }
-     }
       stage('Install dependencies') {
         agent {
           docker {
@@ -96,24 +85,4 @@ pipeline {
         }
       }
     }
-   post {
-     success {
-       githubNotify(
-         status: "SUCCESS",
-         credentialsId: "github-commit-status-credentials",
-         account: githubAccount,
-         repo: githubRepoName,
-         description: "All checks have passed"
-       )
-     }
-     failure {
-       githubNotify(
-         status: "FAILURE",
-         credentialsId: "github-commit-status-credentials",
-         account: githubAccount,
-         repo: githubRepoName,
-         description: "Some checks were not successful"
-       )
-     }
-   }
   }
