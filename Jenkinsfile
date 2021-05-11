@@ -4,7 +4,7 @@ pipeline {
     booleanParam(name: 'CANARY_DEPLOYMENT', defaultValue: false, description: 'Deploy Canary?')
   }
   environment {
-    imageName = 'jaimesalas/math-api:latest'
+    imageName = 'jaimesalas/math-api'
     ec2Instance = 'ec2-13-36-240-133.eu-west-3.compute.amazonaws.com'
     appPort = 80
   }
