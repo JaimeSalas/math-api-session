@@ -25,4 +25,8 @@ export ELB=$(kubectl get svc grafana -o jsonpath='{.status.loadBalancer.ingress[
 
 echo "http://$ELB"
 ```
+## Istio Ingress
 
+```bash
+kubectl -n istio-system get svc
+```

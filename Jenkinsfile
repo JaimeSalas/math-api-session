@@ -104,8 +104,9 @@ pipeline {
           if (params.CANARY_DEPLOYMENT) {
             versioningLatestAndPushImage(imageName, 'v2')
             cleanLocalImages(imageName, 'v2')
-            
-            sh 'echo connect to kubernetes and apply canary deployment...'
+            withKubeConfig([credentialsId: 'K8S-FILE', serverUrl: 'https://CF0249BAED2CBFAE8A24D34CE5E6CF7C.sk1.eu-west-3.eks.amazonaws.com']) {
+              sh 'kubectl apply -f kube/canary-deployment.yaml'
+            }
           } else {
             versioningLatestAndPushImage(imageName, 'v1')
             cleanLocalImages(imageName, 'v1')
