@@ -30,3 +30,5 @@ echo "http://$ELB"
 ```bash
 kubectl -n istio-system get svc
 ```
+
+`http://ae594cd55f2a94d6a921b6916692872a-1620865600.eu-west-3.elb.amazonaws.com/api/sum?a=2&b=2`
